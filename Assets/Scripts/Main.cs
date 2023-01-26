@@ -15,18 +15,38 @@ public class Main : NetworkBehaviour
         netSettings.startClient += NetSettingsOnClientStart;
     }
     private void startClient(IPAddress ip, ushort port) {
-        Debug.Log("Start client");
         var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
         utp.ConnectionData.Address = ip.ToString();
         utp.ConnectionData.Port = port;
 
         NetworkManager.Singleton.StartClient();
         netSettings.hide();
+        Debug.Log("Start client");
+    }
+
+    private void startHost(IPAddress ip, ushort port)
+    {
+        var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        utp.ConnectionData.Address = ip.ToString();
+        utp.ConnectionData.Port = port;
+
+        NetworkManager.Singleton.StartHost();
+        netSettings.hide();
+        Debug.Log("Start host");
+    }
+    private void startServer(IPAddress ip, ushort port) {
+        var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
+        utp.ConnectionData.Address = ip.ToString();
+        utp.ConnectionData.Port = port;
+
+        NetworkManager.Singleton.StartServer();
+        netSettings.hide();
+        Debug.Log("Start server");
     }
 
 
 
-    //------------------------------------
+    // ------------------------------------
     // Events
     private void NetSettingsOnServerStart(IPAddress ip, ushort port) {
         Debug.Log("Server started");
