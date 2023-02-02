@@ -20,11 +20,15 @@ public class Main : NetworkBehaviour
         utp.ConnectionData.Address = ip.ToString();
         utp.ConnectionData.Port = port;
 
+        NetworkManager.Singleton.OnClientConnectedCallback += ClientOnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback += ClientOnClientDisconnected;
+
         NetworkManager.Singleton.StartClient();
         netSettings.hide();
         Debug.Log("Started client");
     }
 
+    
     private void startHost(IPAddress ip, ushort port) {
         var utp = NetworkManager.Singleton.GetComponent<UnityTransport>();
         utp.ConnectionData.Address = ip.ToString();
@@ -43,9 +47,13 @@ public class Main : NetworkBehaviour
         utp.ConnectionData.Address = ip.ToString();
         utp.ConnectionData.Port = port;
 
+        NetworkManager.Singleton.OnClientConnectedCallback += HostOnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback += HostOnClientDisconnected;
+
         NetworkManager.Singleton.StartServer();
         netSettings.hide();
         Debug.Log("Started server");
+        printIs("startServer");
     }
 
 
@@ -71,16 +79,24 @@ public class Main : NetworkBehaviour
     }
 
     private void printIs(string msg) {
-        Debug.Log($"[{msg}] Server:{IsServer} Host: {IsHost} Client: {IsClient} Owner: {IsOwner}");
+        Debug.Log($"[{msg}] server:{IsServer} host:{IsHost} client:{IsClient} owner:{IsOwner}");
     }
 
     private void HostOnClientConnected(ulong clientID) {
-        Debug.Log($"Client connected: {clientID}");
+        Debug.Log($"Client connected to me: {clientID}");
         
     }
 
     private void HostOnClientDisconnected(ulong clientID)
     {
+        Debug.Log($"Client disconnected from me: {clientID}");
+    }
+
+    private void ClientOnClientConnected(ulong clientID) {
+        Debug.Log($"Client disconnected: {clientID}");
+    }
+
+    private void ClientOnClientDisconnected(ulong clientID) {
         Debug.Log($"Client disconnected: {clientID}");
     }
 
